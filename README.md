@@ -29,7 +29,15 @@ A stratified 20% holdout remains separate from selection. Development cross-vali
 
 ## Results
 
-Execution results have not been verified in this repository starter. Replace this paragraph with the actual model_comparison.csv table and metrics.json from output/real/. Report selected model, CV AUC, holdout AUC, precision, recall, F1, threshold, sample size and history-table usage. Do not insert synthetic or illustrative scores.
+Results supplied from a real HOME_CREDIT run: 307,511 labelled rows, 126 input features before encoding, positive fraction 8.0729%, Python 3.12.14, seed 42. Historical-table usage and the exact run command remain unconfirmed.
+
+| Model | Development CV AUC | Holdout AUC | Holdout AP |
+|---|---:|---:|---:|
+| LightGBM | 0.760748 | 0.764897 | 0.256499 |
+| Logistic regression | 0.749182 | 0.752069 | 0.237755 |
+| Random forest | 0.740086 | 0.744314 | 0.231170 |
+
+Development CV selected LightGBM (num_leaves=15, reg_lambda=5). The development OOF F1 threshold was 0.156324. Holdout precision: 0.256679, recall: 0.414099, F1: 0.316917. Holdout accuracy was not included in the supplied metrics. Results do not establish profit improvement or statistical significance of model differences. Logistic C=0.1; random forest max_depth=10.
 
 Outputs include ROC and precision–recall curves, a confusion matrix, model comparison and interpretation plots. Kaggle application_test has no labels, so the script does not report a local test AUC. Permutation importance explains the selected model on development data. SHAP explains LightGBM specifically.
 
