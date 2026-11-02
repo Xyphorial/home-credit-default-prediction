@@ -1,0 +1,6 @@
+{
+  "source": "full_history",
+  "selection": "highest development CV AUC across all compared configurations",
+  "cv_auc": 0.7792024234822327,
+  "model": "LightGBM + all available history"
+}

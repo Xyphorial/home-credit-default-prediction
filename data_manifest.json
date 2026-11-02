@@ -1,0 +1,49 @@
+{
+  "train_rows": 307511,
+  "test_rows": 48744,
+  "train_columns": 122,
+  "test_columns": 121,
+  "target_counts": {
+    "0": 282686,
+    "1": 24825
+  },
+  "id_overlap": 0,
+  "source_files": {
+    "HomeCredit_columns_description.csv": "eef7665398228a80f7367c9258220c5fbe1038f3f54094244f354d54e2d4fb03",
+    "POS_CASH_balance.csv": "0e13bc573ffa8fc29b3f00d975e557143193a405d675b0e4694b06fbdffcb0cd",
+    "application_test.csv": "a36161331d839150a67b6216d4de066f543a3b01a34061507d40e76612e0dec8",
+    "application_train.csv": "52e96b895b1112e1c853f670e58372719c8441c5ed1c57ac2f7fad559d784f5f",
+    "bureau.csv": "9d799143423f280720cf51c1bfbbab2a0422da8ff2763335bb30bf43155494f7",
+    "bureau_balance.csv": "33e09f06174c26f0be6b8b7398886c69e7bf0abbb29b4122f7841ffe545729a9",
+    "credit_card_balance.csv": "a9cdc48900d55131c90f3128b991859aeb94ca1326fb5f4d1624b9fd03782247",
+    "installments_payments.csv": "428c2e2496e4d6d697ee8270e98497e5213c41be16d882eed1bc95b133726797",
+    "previous_application.csv": "5046cd657ee04df2eaa6dc8308ae86be6b3b1763674a3f63574886a2f2896505",
+    "sample_submission.csv": "95258f8383ad9da4921120d695a12f2321ed7d0963507636f9f38ce0025633cb"
+  },
+  "history": {
+    "bureau_rows": 1716428,
+    "balance_rows": 27299925,
+    "unmatched_balance_rows": 3120184,
+    "features": 80
+  },
+  "received_file_count": 10,
+  "metadata_files": [
+    "HomeCredit_columns_description.csv",
+    "sample_submission.csv"
+  ],
+  "sample_submission_order_matches_test": true,
+  "source_row_counts": {
+    "application_train": 307511,
+    "application_test": 48744,
+    "bureau": 1716428,
+    "bureau_balance": 27299925,
+    "previous_application": 1670214,
+    "installments_payments": 13605401,
+    "credit_card_balance": 3840312,
+    "POS_CASH_balance": 10001358,
+    "sample_submission": 48744,
+    "HomeCredit_columns_description": 219
+  },
+  "full_history_model_features": 470,
+  "training_complete": true
+}

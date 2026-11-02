@@ -1,0 +1,17 @@
+{
+  "data_mode": "HOME_CREDIT",
+  "selected_model": "LightGBM",
+  "selection_rule": "highest development CV AUC, before holdout evaluation",
+  "threshold_from_development_oof": 0.15632379569035873,
+  "holdout_auc": 0.7648971610214157,
+  "holdout_average_precision": 0.25649892779957334,
+  "precision": 0.25667915106117356,
+  "recall": 0.41409869083585094,
+  "f1": 0.31691714836223506,
+  "default_fraction": 0.08072881945686496,
+  "rows": 307511,
+  "features": 126,
+  "python": "3.12.14",
+  "seed": 42,
+  "cv_note": "CV and OOF are used for tuning; final holdout is the independent evaluation. Threshold OOF is not nested."
+}

@@ -1,10 +1,21 @@
-data/
-output/
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
 .venv/
 venv/
-__pycache__/
-.ipynb_checkpoints/
-.DS_Store
 .env
-*.joblib
-*.pkl
+*.log
+# Original Kaggle data, even if added later
+data/*.csv
+data/*.zip
+# Per-applicant model outputs and binary training artifacts
+**/model.joblib
+**/checkpoint.joblib
+**/*predictions.csv
+**/oof.csv
+**/*_oof.csv
+**/submission.csv
+# Temporary local artifacts
+output/real_sample/

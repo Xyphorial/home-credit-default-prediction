@@ -1,50 +1,49 @@
-# Home Credit Default Prediction
+# Home Credit Default Risk | End-to-End Credit Risk Modelling
 
-A binary classification pipeline by Xuerun Mao. It compares logistic regression, random forest and LightGBM on the Home Credit Default Risk dataset.
+**Python • LightGBM • Feature Engineering • Stratified CV • SHAP**
 
-## Data
+Estimate the probability of a Home Credit applicant experiencing repayment difficulties. This is an analytical ML classification project using the [Kaggle Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk/data) dataset. Raw competition data and row-level customer predictions are **not redistributed**.
 
-Download data from https://www.kaggle.com/competitions/home-credit-default-risk/data (Kaggle access and competition rules apply). Put application_train.csv and application_test.csv in data/. For historical features, also add bureau.csv, bureau_balance.csv, previous_application.csv, installments_payments.csv, credit_card_balance.csv and POS_CASH_balance.csv. These raw files are not included.
+## Overview
 
-Historical aggregation uses available files and skips absent ones. Record exactly which tables you used. The --secondary option enables history aggregation.
+- Compared Logistic Regression, Random Forest, primary-application LightGBM, bureau-enhanced LightGBM and a **full-history LightGBM**.
+- Generated application ratios, EXT_SOURCE summary features, and six historical-table aggregates joined at applicant level.
+- Split the available labelled dataset chronologically *not* by date but using a fixed **stratified random 80/20 holdout**, with threefold stratified CV inside development data.
+- Selected hyperparameters by CV AUC and operating threshold using **development-only out-of-fold** predictions; evaluated on a separate holdout.
+- Investigated feature importance, SHAP explanations, missing data, probability ranking and error subgroups.
 
-## Setup and execution
+## Archived results
 
-Use a Python environment compatible with the dependencies below. The dependency list is inferred from imports, not a tested version lock.
+| Model | Holdout ROC AUC |
+|---|---:|
+| Logistic Regression | 0.7521 |
+| Random Forest | 0.7443 |
+| Application-only LightGBM | 0.7649 |
+| LightGBM + bureau | 0.7691 |
+| **LightGBM + all available history** | **0.7822** |
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python main.py --data-dir data --secondary --folds 3
-```
+Best full-history run: **470 features**, **OOF ROC AUC 0.7792**, **holdout average precision 0.2838**, 307,511 labelled training rows and 48,744 unlabelled competition test rows. There is **no labelled Kaggle-test AUC** or reported live competition score; 0.7822 is an internal holdout result.
 
-To use only the application tables, omit --secondary. A smaller development run can use --sample 20000, but report that sampling explicitly. Running --demo generates synthetic data and must never be described as a real Home Credit result.
+See [full results (Chinese)](RESULTS_ZH.md), [model comparison](output/all_model_comparison.csv), [metrics](output/full_history/metrics.json), [ROC plot](output/full_history/roc_curve.png), [PR plot](output/full_history/pr_curve.png) and [feature importance](output/full_history/feature_importance.png).
 
-## Features and validation
+## Running the project
 
-The code handles the employment sentinel 365243, constructs financial ratios and aggregates historical numeric records by applicant using mean/max/min/count. Preprocessing fits within each training fold.
+1. Install Python 3.12 and the dependencies in `requirements.txt` (original tested versions in `requirements-tested.txt`).
+2. Download the competition files from Kaggle into `data/`; [see required filenames](data/README.md).
+3. Run stages in this order: `main.py --folds 3`, `enhanced.py`, `enhanced.py --extra`, `finalize_report.py`, `verify_outputs.py`. `run_project.py` is an orchestration helper.
+4. Open `walkthrough.ipynb` to examine the **included aggregate results and plots** without retraining.
 
-A stratified 20% holdout remains separate from selection. Development cross-validation AUC selects the model and parameters. Development out-of-fold predictions select a threshold by maximum F1. Because tuning uses the same development data, CV and OOF estimates can be optimistic. Holdout evaluation is independent of selection. After evaluation, the selected configuration is refit on all labelled data for submission predictions.
+The complete raw-data-based verification, row-level prediction tables and final model binaries are intentionally omitted from the public version. They can be recreated locally after downloading data and running the pipeline. Scripts that check full saved predictions require those regenerated outputs.
 
-## Results
+## File guide
 
-Results supplied from a real HOME_CREDIT run: 307,511 labelled rows, 126 input features before encoding, positive fraction 8.0729%, Python 3.12.14, seed 42. Historical-table usage and the exact run command remain unconfirmed.
+- `main.py` — baseline EDA, model training, CV, evaluation and outputs.
+- `history.py` and `extra_history.py` — applicant-level historical aggregations.
+- `enhanced.py` — enriched models and selection.
+- `finalize_report.py` and `verify_outputs.py` — reporting and audits.
+- `walkthrough.ipynb` — visually explores included results.
+- `output/` — selected summary CSVs, JSON metrics and figures (not individual customer records).
 
-| Model | Development CV AUC | Holdout AUC | Holdout AP |
-|---|---:|---:|---:|
-| LightGBM | 0.760748 | 0.764897 | 0.256499 |
-| Logistic regression | 0.749182 | 0.752069 | 0.237755 |
-| Random forest | 0.740086 | 0.744314 | 0.231170 |
+## Caveats
 
-Development CV selected LightGBM (num_leaves=15, reg_lambda=5). The development OOF F1 threshold was 0.156324. Holdout precision: 0.256679, recall: 0.414099, F1: 0.316917. Holdout accuracy was not included in the supplied metrics. Results do not establish profit improvement or statistical significance of model differences. Logistic C=0.1; random forest max_depth=10.
-
-Outputs include ROC and precision–recall curves, a confusion matrix, model comparison and interpretation plots. Kaggle application_test has no labels, so the script does not report a local test AUC. Permutation importance explains the selected model on development data. SHAP explains LightGBM specifically.
-
-## Limitations
-
-Historical inputs need a field-level audit of availability at application time. The implementation does not explicitly filter all historical fields by time. F1 optimization is not a profit-maximizing lending policy. Probability calibration, loss assumptions and customer-specific economics require further work. Importance does not establish causality.
-
-## Reproducibility
-
-Random seed: 42. Default CV folds: 3. Record the exact command, Python version, installed package versions and source data used for your final run. Never publish applicant-level prediction files or raw data with the presentation.
+This is an observational ranking model, not a causal model or production underwriting system. Internal random-holdout performance does not establish future-calendar stability. Model searches were limited, probabilities were not calibrated, and optimizing F1 is not equivalent to optimizing a lending decision's economic cost. Feature generation must account for data availability at application time. Data/label meanings and feature caveats are discussed in `FEATURE_GUIDE_ZH.md` and `DATE_AUDIT.md`.
